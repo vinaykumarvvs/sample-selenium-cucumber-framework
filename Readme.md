@@ -27,5 +27,5 @@ Setup your machine.
 ---
 
 ### Tests
-1. **[TestCase-1](https://github.com/vinaykumarvvs/sample-selenium-cucumber-framework/blob/master/src/test/resources/features/DemoQADragAndDrop.feature):** Resize the editor and log dimensions every time
-2. **[TestCase-2](https://github.com/vinaykumarvvs/sample-selenium-cucumber-framework/blob/master/src/test/resources/features/DemoQAResize.feature#L13):** Drag and drop operation scenario
+1. **[TestCase-1](https://github.com/vinaykumarvvs/sample-selenium-cucumber-framework/blob/master/src/test/resources/features/DemoQADragAndDrop.feature):** Drag and drop operation scenario
+2. **[TestCase-2](https://github.com/vinaykumarvvs/sample-selenium-cucumber-framework/blob/master/src/test/resources/features/DemoQAResize.feature#L13):** Resize the editor and log dimensions every time
