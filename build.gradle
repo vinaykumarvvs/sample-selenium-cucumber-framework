@@ -1,0 +1,88 @@
+import net.masterthought.cucumber.ReportBuilder
+import net.masterthought.cucumber.Configuration
+import groovyx.gpars.GParsPool
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.masterthought:cucumber-reporting:5.7.8'
+        classpath 'org.codehaus.gpars:gpars:1.1.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+group 'com.sampleseleniumcucumberframework'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+    implementation 'org.slf4j:slf4j-api:2.0.11'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.15.0'
+    testImplementation 'io.cucumber:cucumber-core:7.15.0'
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
+    testImplementation 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+def cucumberConfig(filePath) {
+    javaexec {
+        main = "io.cucumber.core.cli.Main"
+        classpath = sourceSets.test.runtimeClasspath
+        args = ["-p", "pretty", "-p", "json:${reporting.baseDir}/cucumber/cucumber.json", "--glue", "steps", "-t", "$tags",
+                filePath]
+        systemProperties = [
+                "browser": System.getProperty("browser")
+        ]
+    }
+}
+
+task runTestsInSequence() {
+    doLast {
+        cucumberConfig("${project.projectDir}/src/test/resources/features")
+    }
+}
+
+task runTestsInParallel() {
+    doLast {
+        def features = fileTree(dir: "${project.projectDir}/src/test/resources/features/").include '**/*.feature'
+        GParsPool.withPool(2) {
+            features.eachParallel { File file ->
+                cucumberConfig(file.getAbsolutePath())
+            }
+        }
+    }
+}
+
+// Need to fix it for Parallel Case
+task generateReport() {
+    doLast {
+        def jsonReports = fileTree(dir: "${reporting.baseDir}/cucumber/").include '**/*.json'.toString()
+        File reportOutputDirectory = new File("${reporting.baseDir}/cucumber")
+
+        List<String> jsonReportFiles = new ArrayList<String>()
+        jsonReports.each { File file ->
+            jsonReportFiles.add("${reporting.baseDir}/cucumber/${file.name}".toString())
+        }
+
+        Configuration configuration = new Configuration(reportOutputDirectory, "Sample Selenium Cucumber Framework")
+        ReportBuilder reportBuilder = new ReportBuilder(jsonReportFiles, configuration)
+        reportBuilder.generateReports()
+        println("\nReport available on: ${reporting.baseDir}/cucumber/cucumber-html-reports/overview-features.html")
+    }
+}
+
+runTestsInSequence.finalizedBy(generateReport)
+runTestsInParallel.finalizedBy(generateReport)

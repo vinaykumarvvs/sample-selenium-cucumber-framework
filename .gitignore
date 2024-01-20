@@ -1,0 +1,8 @@
+.gradle/
+.idea/
+out/
+gradle
+build/
+*.iml
+*.store
+Dimensions.txt
