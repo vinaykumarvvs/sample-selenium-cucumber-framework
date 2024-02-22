@@ -15,7 +15,7 @@ public class DemoQAResizablePage extends BasePage {
     private ResizeEventHandler resizeEventHandler;
     private int resizeCounter = 1;
 
-    @FindBy(xpath = "//div[@class='main-header' and text()='Resizable']")
+    @FindBy(xpath = "//h1[@class='text-center' and text()='Resizable']")
     private WebElement resizableTitle;
 
     @FindBy(css = "[id='resizable'] [class*='react-resizable-handle']")
@@ -36,6 +36,7 @@ public class DemoQAResizablePage extends BasePage {
 
     public void resizeTheTextEditor(int xOffSet, int yOffSet) {
         waitForElementToBeVisible(resizableIconInTextEditor, driver);
+        sleepFor(3000);
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
         sleepFor(3000);
         new Actions(driver).clickAndHold(resizableIconInTextEditor).moveByOffset(xOffSet, yOffSet).release().perform();

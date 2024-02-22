@@ -20,6 +20,9 @@ public class DemoQAHomePage extends BasePage {
     @FindBy(xpath = "//*[text()='Droppable']")
     private WebElement droppableLink;
 
+    @FindBy(css = "[class='element-list collapse show']")
+    private WebElement expandDropdown;
+
     public DemoQAHomePage(WebDriver driver) {
         this.driver = driver;
     }
@@ -30,7 +33,9 @@ public class DemoQAHomePage extends BasePage {
 
     public void openInteractionsBlockAndExpand() {
         clickOn(interactionsBlockBtn, driver);
-        clickOn(interactionsBlockBtn, driver);
+        sleepFor(5000);
+        if (!expandDropdown.isDisplayed())
+          clickOn(interactionsBlockBtn, driver);
     }
 
     public void clickOnResizableLink() {

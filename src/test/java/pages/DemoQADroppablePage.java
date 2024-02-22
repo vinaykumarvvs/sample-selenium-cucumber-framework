@@ -18,7 +18,7 @@ public class DemoQADroppablePage extends BasePage {
     private SeleniumEventHandler seleniumEventHandler;
     private DragAndDropEventHandler dragAndDropEventHandler;
 
-    @FindBy(xpath = "//div[@class='main-header' and text()='Droppable']")
+    @FindBy(xpath = "//h1[@class='text-center' and text()='Droppable']")
     private WebElement droppableTitle;
 
     @FindBy(id = "draggable")
